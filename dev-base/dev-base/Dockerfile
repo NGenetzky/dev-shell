@@ -20,7 +20,18 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get update && apt-get install -y \
     locales \
     && locale-gen --purge en_US.UTF-8 \
-    && update-locale LANG=en_US.UTF-8
+    && update-locale LANG=en_US.UTF-8 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y \
+    python \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add "repo" tool (used by many Yocto-based projects)
+RUN curl http://storage.googleapis.com/git-repo-downloads/repo \
+    > /usr/local/bin/repo \
+    && chmod a+x /usr/local/bin/repo
 
 # No passwd when using 'sudo'
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
