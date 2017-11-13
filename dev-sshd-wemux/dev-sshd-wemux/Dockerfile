@@ -17,14 +17,15 @@ RUN apt-get update && apt-get install -y \
     && echo "AllowAgentForwarding yes" >> /etc/ssh/sshd_config
 
 RUN echo 'root:root' | chpasswd \
-    && sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-
-# Define 'dev' USER
-# RUN useradd dev -d /home/dev -m -s /bin/bash \
-#     && adduser dev sudo \
-#     && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-# USER dev
+    && sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
+    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 COPY authorized_keys /root/.ssh/authorized_keys
+
+# Define 'dev' USER
+RUN useradd dev -d /home/dev -m -s /bin/bash \
+    && adduser dev sudo \
+    && cp -R /root/.ssh/ /home/dev/.ssh/
+
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]

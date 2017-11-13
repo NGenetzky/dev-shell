@@ -11,7 +11,7 @@ build()
 run()
 {
     sudo docker run \
-        -it \
+        -d \
         -p 2222:22 \
         -v $(pwd):/mnt/pwd \
         dev-sshd-wemux:0.0.1
