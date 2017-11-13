@@ -17,29 +17,17 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Locale set to en_US.UTF-8
 RUN apt-get update && apt-get install -y \
     locales \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && locale-gen --purge en_US.UTF-8 \
-    && update-locale LANG=en_US.UTF-8 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && update-locale LANG=en_US.UTF-8
 
 RUN apt-get update && apt-get install -y \
     python \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
 
 # Add "repo" tool (used by many Yocto-based projects)
-RUN curl http://storage.googleapis.com/git-repo-downloads/repo \
-    > /usr/local/bin/repo \
-    && chmod a+x /usr/local/bin/repo
-
-# No passwd when using 'sudo'
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-# Define 'dev' USER
-RUN useradd dev -d /home/dev -m \
-    && adduser dev sudo
-USER dev
-WORKDIR /home/dev/
-
-
+RUN curl http://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo &&\
+    chmod a+x /usr/local/bin/repo
